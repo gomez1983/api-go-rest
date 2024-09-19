@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gomez1983/go-rest-api/database"
 	"github.com/gomez1983/go-rest-api/models"
 	"github.com/gorilla/mux"
 )
@@ -16,7 +17,9 @@ func Home(w http.ResponseWriter, r *http.Request) { /*É a resposta para requisi
 }
 
 func TodasPersonalidades(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(models.Personalidades)
+	var p []models.Personalidade
+	database.DB.Find(&p)
+	json.NewEncoder(w).Encode(p)
 }
 
 func RetornaUmaPersonalidade(w http.ResponseWriter, r *http.Request) {
