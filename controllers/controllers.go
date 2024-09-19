@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gomez1983/go-rest-api/database"
 	"github.com/gomez1983/go-rest-api/models"
@@ -16,19 +15,16 @@ func Home(w http.ResponseWriter, r *http.Request) { /*É a resposta para requisi
 
 }
 
-func TodasPersonalidades(w http.ResponseWriter, r *http.Request) {
-	var p []models.Personalidade
-	database.DB.Find(&p)
-	json.NewEncoder(w).Encode(p)
+func TodasPersonalidades(w http.ResponseWriter, r *http.Request) { /** Define a função que recebe um ResponseWriter e um Request **/
+	var p []models.Personalidade /** Declara uma variável do tipo slice de Personalidade **/
+	database.DB.Find(&p)         /** Busca todas as personalidades no banco de dados e armazena no slice **/
+	json.NewEncoder(w).Encode(p) /** Codifica o slice de personalidades em JSON e envia na resposta **/
 }
 
-func RetornaUmaPersonalidade(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	for _, personalidade := range models.Personalidades {
-		if strconv.Itoa(personalidade.Id) == id { /*Converte String em inteiro*/
-			json.NewEncoder(w).Encode(personalidade)
-		}
-	}
+func RetornaUmaPersonalidade(w http.ResponseWriter, r *http.Request) { /** Define a função que recebe um ResponseWriter e um Request **/
+	vars := mux.Vars(r)                      /** Pega as variáveis da rota, como o "id" **/
+	id := vars["id"]                         /** Atribui o valor da variável "id" da rota à variável id **/
+	var personalidade models.Personalidade   /** Declara uma variável do tipo Personalidade **/
+	database.DB.First(&personalidade, id)    /** Busca a primeira personalidade com o id informado no banco de dados **/
+	json.NewEncoder(w).Encode(personalidade) /** Codifica a personalidade em JSON e envia na resposta **/
 }
