@@ -12,7 +12,6 @@ import (
 
 func Home(w http.ResponseWriter, r *http.Request) { /*É a resposta para requisição em Home*/
 	fmt.Fprint(w, "Home Page")
-
 }
 
 func TodasPersonalidades(w http.ResponseWriter, r *http.Request) { /** Define a função que recebe um ResponseWriter e um Request **/
@@ -27,4 +26,11 @@ func RetornaUmaPersonalidade(w http.ResponseWriter, r *http.Request) { /** Defin
 	var personalidade models.Personalidade   /** Declara uma variável do tipo Personalidade **/
 	database.DB.First(&personalidade, id)    /** Busca a primeira personalidade com o id informado no banco de dados **/
 	json.NewEncoder(w).Encode(personalidade) /** Codifica a personalidade em JSON e envia na resposta **/
+}
+
+func CriaUmaNovaPersonalidade(w http.ResponseWriter, r *http.Request) { /** Define a função que recebe um ResponseWriter e um Request **/
+	var novaPersonalidade models.Personalidade
+	json.NewDecoder(r.Body).Decode(&novaPersonalidade)
+	database.DB.Create(&novaPersonalidade)
+	json.NewEncoder(w).Encode(novaPersonalidade)
 }
