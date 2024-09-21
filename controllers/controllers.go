@@ -29,8 +29,16 @@ func RetornaUmaPersonalidade(w http.ResponseWriter, r *http.Request) { /** Defin
 }
 
 func CriaUmaNovaPersonalidade(w http.ResponseWriter, r *http.Request) { /** Define a função que recebe um ResponseWriter e um Request **/
-	var novaPersonalidade models.Personalidade
-	json.NewDecoder(r.Body).Decode(&novaPersonalidade)
-	database.DB.Create(&novaPersonalidade)
-	json.NewEncoder(w).Encode(novaPersonalidade)
+	var novaPersonalidade models.Personalidade         /** Declara uma nova variável do tipo Personalidade **/
+	json.NewDecoder(r.Body).Decode(&novaPersonalidade) /** Decodifica o corpo da requisição JSON e atribui à novaPersonalidade **/
+	database.DB.Create(&novaPersonalidade)             /** Cria uma nova entrada no banco de dados com os dados de novaPersonalidade **/
+	json.NewEncoder(w).Encode(novaPersonalidade)       /** Codifica a nova personalidade em JSON e envia como resposta **/
+}
+
+func DeletaUmaPersonalidade(w http.ResponseWriter, r *http.Request) { /** Define a função que recebe um ResponseWriter e um Request **/
+	vars := mux.Vars(r)                      /** Pega as variáveis da rota, como o "id" **/
+	id := vars["id"]                         /** Atribui o valor da variável "id" da rota à variável id **/
+	var personalidade models.Personalidade   /** Declara uma variável do tipo Personalidade **/
+	database.DB.Delete(&personalidade, id)   /** Deleta a personalidade do banco de dados com o ID fornecido **/
+	json.NewEncoder(w).Encode(personalidade) /** Codifica a personalidade (mesmo deletada) em JSON e envia como resposta **/
 }
