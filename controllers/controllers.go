@@ -42,3 +42,13 @@ func DeletaUmaPersonalidade(w http.ResponseWriter, r *http.Request) { /** Define
 	database.DB.Delete(&personalidade, id)   /** Deleta a personalidade do banco de dados com o ID fornecido **/
 	json.NewEncoder(w).Encode(personalidade) /** Codifica a personalidade (mesmo deletada) em JSON e envia como resposta **/
 }
+
+func EditaPersonalidade(w http.ResponseWriter, r *http.Request) { /** Define a função que recebe um ResponseWriter e um Request **/
+	vars := mux.Vars(r)                            /** Pega as variáveis da rota, como o "id" **/
+	id := vars["id"]                               /** Atribui o valor da variável "id" da rota à variável id **/
+	var personalidade models.Personalidade         /** Declara uma variável do tipo Personalidade **/
+	database.DB.First(&personalidade, id)          /** Busca a primeira personalidade no banco de dados com o ID fornecido **/
+	json.NewDecoder(r.Body).Decode(&personalidade) /** Decodifica o corpo da requisição JSON e atualiza a variável personalidade **/
+	database.DB.Save(&personalidade)               /** Salva as alterações feitas na personalidade no banco de dados **/
+	json.NewEncoder(w).Encode(personalidade)       /** Codifica a personalidade atualizada em JSON e envia como resposta **/
+}
